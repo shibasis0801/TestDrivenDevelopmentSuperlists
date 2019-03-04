@@ -6,7 +6,8 @@ They are used to drive User flows.
 """
 from selenium import webdriver
 import unittest
-
+import time
+from selenium.webdriver.common.keys import Keys
 
 class NewVisitorTest(unittest.TestCase):
 
@@ -21,18 +22,34 @@ class NewVisitorTest(unittest.TestCase):
 
         # Test if title is correct
         self.assertIn("To-Do", self.browser.title)
-        self.fail("Finish the test !")
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertIn('To-Do', header_text)
         
         # Comments will specify tests for the required behaviour
-        
-        # Enter a todo item
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertEqual(
+            inputbox.get_attribute('placeholder'),
+            'Enter a to-do item'
+        )
+
         
         # Type "Buy peacock feathers" into a text box
+        inputbox.send_keys("Buy peacock feathers")
         
         # Hit Enter, "1: Buy peacock feathers" appears as an ToDo item in the list
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertTrue(
+            any(row.text == '1: Buy Peacock Feathers' for row in rows)
+        )
         
         # A visible text box to enter more todo items, Enter another todo item
         # "Make a fly"
+        self.fail("Finish tests")
+
         
         # Page updates again to show both items in the list
         
@@ -40,6 +57,8 @@ class NewVisitorTest(unittest.TestCase):
         
         # Visit given URL and list must exist there
         
+        self.fail("Finish the test !")
+
 if __name__ == "__main__":
     unittest.main(warnings="ignore")
 
