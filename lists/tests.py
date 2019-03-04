@@ -1,8 +1,11 @@
 from django.test import TestCase
+from django.urls import resolve 
+from lists.views import home_page
 
 # Create your tests here.
 
-class SmokeTest(TestCase):
+class HomePageTest(TestCase):
 
-    def tests_bad_maths(self):
-        self.assertEqual(2+3, 2)
+    def test_root_url_resolves_to_home_page(self):
+        found = resolve('/')
+        self.assertEqual(found.func, home_page)
